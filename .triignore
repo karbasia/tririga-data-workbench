@@ -1,0 +1,17 @@
+src
+public
+node_modules
+.git
+.vscode
+.eslintrc.cjs
+.gitignore
+components.json
+index.html
+package-lock.json
+package.json
+postcss.config.js
+README.md
+tailwind.config.js
+tsconfig.json
+tsconfig.node.json
+vite.config.ts
