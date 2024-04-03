@@ -79,7 +79,7 @@ function App() {
         <div className="flex flex-col h-full">
           <div className="flex-none"><h1 className="text-2xl">TRIRIGA Data Workbench</h1></div>
           <div className="flex flex-1">
-            <ul className="cursor-default">
+            <ul>
               {dbSchema.length === 0 && <span>Please add a data source</span>}
               {dbSchema.map((table) => <TableList key={table.tableName} tableInfo={table} />)}
             </ul>
