@@ -49,10 +49,17 @@ function App() {
     query = query.replace('\n', '');
     if (db && query) {
       try {
-        const conn = await db.connectInternal();
-        const res = await db.runQuery(conn, query);
-        setResults(res);
-        db.disconnect(conn);
+        // Alter and create statements need a different execution method
+        if (query.toUpperCase().startsWith("ALTER") || query.toUpperCase().startsWith("CREATE")) {
+          const conn = await db.connect();
+          await conn.send(query);
+          await conn.close();
+        } else {
+          const conn = await db.connectInternal();
+          const res = await db.runQuery(conn, query);
+          setResults(res);
+          db.disconnect(conn);
+        }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (ex: any) {
         toast({
@@ -66,7 +73,7 @@ function App() {
   }
 
   const handleAddDataSource = (data: TableInfo) => {
-    setDbSchema([...dbSchema, data]);
+    setDbSchema(prev => [...prev, data]);
   }
 
   return (
