@@ -5,11 +5,14 @@ const convertDataType = (val: string, type: string): string | Number | Date => {
   try {
     switch (type) {
       case 'Number':
-        return new Number(val.replace(/[^0-9.]/g, ''));
+        return +(val.replace(/[^0-9.]/g, ''));
       case 'Date':
         return new Date(Date.parse(val)).toISOString().split('T')[0];
       case 'Date and Time':
         return new Date(Date.parse(val)).toISOString();
+      case 'Text':
+        // Also try to cast string fields that are numeric into numbers (e.g. ID, spec ID, form ID, etc.)
+        return isNaN(+val) ? val : +val;
       default:
         return val;
     }
@@ -29,16 +32,20 @@ self.addEventListener('message', async (e) => {
     const reportName = e.data.name;
     const newResults = [];
   
-    const columnsObj: { [key: string]: string } = {};
+    const columnTypes: { [key: string]: string } = {};
+    const columnNames: { [key: string]: string } = {};
   
     for (const header of data.headers) {
-      columnsObj[header.id] = header.type;
+      columnTypes[header.id] = header.type;
+      columnNames[header.id] = header.id.indexOf("-") > -1 ? header.id.substring(1).replace(/[-]/g, '') : header.id;
     }
   
     for (const row of data.data) {
       const convertedObj: { [key: string]: string | Number | Date } = {};
       for (const [key, val] of Object.entries(row)) {
-        convertedObj[key] = convertDataType(val, columnsObj[key]);
+        if (key in columnNames) {
+          convertedObj[columnNames[key]] = convertDataType(val, columnTypes[key]);
+        }
       }
       newResults.push(convertedObj);
     }

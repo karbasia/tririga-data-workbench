@@ -38,7 +38,7 @@ function FileUpload(props: {
 
   const handleFileOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if(e.target.files) {
-      setFileName(e.target.files[0].name);
+      setFileName(e.target.files[0].name.replace('.csv', ''));
       fileReader.readAsText(e.target.files[0]);
     }
     

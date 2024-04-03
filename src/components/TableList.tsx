@@ -15,8 +15,8 @@ function TableList(props: { tableInfo: TableInfo; }) {
   }
 
   return(
-        <li onClick={handleOnClick}>
-          <span className="text-xl">{tableInfo.tableName}</span>
+        <li>
+          <span onClick={handleOnClick} className="text-xl cursor-pointer">{tableInfo.tableName}</span>
           {isOpen && <FieldList columns={tableInfo.columns} />}
         </li>
   )
